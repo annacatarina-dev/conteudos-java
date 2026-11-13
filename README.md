@@ -1,6 +1,6 @@
---> Linguagem Java OO✨
 
-## Assuntos abordados📕:
+## Linguagem Java Orientado a Objetos✨
+==> Assuntos abordados📕:
 - operadores aritméticos;
 - declarando variáveis;
 - saída de dados;
