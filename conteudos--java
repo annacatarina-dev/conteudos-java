@@ -18,11 +18,9 @@ package ConteudosTeoricos;
 
 // --CONCEITOS IMPORTANTES--
 
-/* O que é um objeto? --> pode ser uma coisa material ou abstrata
- * percebida pelos sentidos e que possui características(atributos), comportamentos(métodos)
- * e o estado atual(são as características atuais do objeto)!,
+/* O que é um objeto? --> é uma instância concreta de uma classe, ele representa uma entidade do mundo real ou do domínio do problema dentro da memória do computador.
  * a classe define o molde(caract, métodos e estado) que serão compartilhados p/ o objeto e
- * todo objeto vem de uma classe, ou seja, o molde usando para criar o objteto
+ * todo objeto vem de uma classe, ou seja, o molde usando para instanciar o objteto
  */
 
 /* Javac --> compilador* java , JVM --> Máquina Virtual Java
@@ -322,13 +320,168 @@ public void setNome(String nome){
 }
 setNome("catarina");
 
---> Metodo construtor: responsável por inicializar os objetos recém-criados.Quando você utiliza a palavra-chave new para instanciar uma classe, o construtor é executado automaticamente para definir os valores iniciais dos atributos e preparar o objeto para uso.
-exemplo:
+--> Metodo construtor: responsável por inicializar os objetos recém-criados. Quando você utiliza a palavra-chave new para instanciar uma classe, o construtor é executado automaticamente para definir os valores iniciais dos atributos e preparar o objeto para uso.
 
+==> Regras básicas de um construtor:
+1. O construtor precisa OBRIGATORIAMENTE ter o MESMO nome da classe que está declarando!;
+2. Não tem um tipo de retorno(nem mesmo o void);
+3. O construtor é executado automaticamente quando o comando new aloca a memoria para a nova instancia.
+
+exemplo:
 public Produto(String nome,String ID){
     this.nome=nome;
     this.ID = ID;
     this.disponivel = 0;
 }
 Produto p1 = new Produto("lapis","4590-99");
+
+->"this." : O this é uma referência ao atributo do objeto atual (a instância que está executando aquele metodo ou construtor naquele momento). Ele resolve o problema de ambiguidade de nomes, que acontece quando um parâmetro (ou variável local) tem o mesmo nome de um atributo da classe.
+
+-> Contrustor default: é quando um construtor não é feito pelo programador então o Java o faz automaticamente SEM parâmetros e com valores padrões, para booleans eh "false", para int e float/double eh 0 e 0.0; objeto/String eh null.
+
+-> Encadeamento de construtores: Ele evita repetir código de inicialização.
+exe.:
+public class Pessoa {
+    private String nome;
+    private int idade;
+    private String cidade;
+
+    // Construtor principal (o mais completo)
+    public Pessoa(String nome, int idade, String cidade) {
+        this.nome = nome;
+        this.idade = idade;
+        this.cidade = cidade;
+        System.out.println("Construtor completo executado");
+    }
+
+    // Chama o construtor principal, usando "Desconhecida" como cidade padrão
+    public Pessoa(String nome, int idade) {
+        this(nome, idade, "Desconhecida");
+        System.out.println("Construtor com nome e idade executado");
+    }
+
+    // Chama o construtor de dois parâmetros, usando idade 0
+    public Pessoa(String nome) {
+        this(nome, 0);
+        System.out.println("Construtor só com nome executado");
+    }
+
+    // Construtor sem argumentos
+    public Pessoa() {
+        this("Sem nome");
+        System.out.println("Construtor padrão executado");
+    }
+
+    public static void main(String[] args) {
+        Pessoa p = new Pessoa();
+    }
+}
+ */
+// =======================================================================================
+
+// --ENCAPSULAMENTO:PILARES DA POO--
+/*
+  PILAR 1 = Encapsulamento: É esconder os detalhes internos de um objeto e controlar como seus dados são acessados ou modificados. O estado fica protegido (geralmente com atributos privados) e o mundo externo só interage por meio de métodos públicos;
+
+  PILAR 2 = Herança : Permite que uma classe (filha ou subclasse) reaproveite atributos e métodos de outra (mãe ou superclasse), podendo estender ou modificar o comportamento. Expressa uma relação do tipo "é um": um Cachorro é um Animal;
+
+  ex.:
+  class Animal:
+    def __init__(self, nome):
+        self.nome = nome
+
+    def comer(self):
+        print(f"{self.nome} está comendo")
+
+    class Cachorro(Animal):
+        def latir(self):
+            print(f"{self.nome} diz: Au au!")
+
+    rex = Cachorro("Rex")
+    rex.comer()  # herdado de Animal
+    rex.latir()  # próprio de Cachorro
+
+  PILAR 3 = Polimorfismo : Significa "muitas formas": objetos de classes diferentes podem responder à mesma mensagem (chamada de metodo) cada um à sua maneira. Quem chama não precisa saber qual é o tipo concreto do objeto;
+  class Animal:
+    def emitir_som(self):
+        raise NotImplementedError
+
+    class Cachorro(Animal):
+        def emitir_som(self):
+            print("Au au!")
+
+    class Gato(Animal):
+        def emitir_som(self):
+            print("Miau!")
+
+    animais = [Cachorro(), Gato()]
+    for animal in animais:
+        animal.emitir_som()  --> cada animal vai responder de um jeito!
+
+  PILAR 4 = Abstraçao : É o processo de focar no essencial e ignorar o que não é relevante para o contexto. Em vez de modelar um objeto com todas as suas características reais, você captura apenas os atributos e comportamentos que importam para o problema que está resolvendo.
+
+ */
+// =======================================================================================
+
+// --CLASSE ABSTRATA E INTERFACE--
+/*
+  -> Classe abstrata: É uma classe que não pode ser INSTANCIADA com new. Ela serve de base para outras e pode misturar métodos prontos(concretos) com métodos sem corpo (abstratos), que as filhas são obrigadas a implementar.
+  -> Uma classe só pode estender uma classe abstrata (herança simples).A filha PRECISA implementar todos os métodos abstratos, ou também ser abstrata.
+
+  ex.:
+  abstract class Funcionario {
+    private String nome;
+    protected double salarioBase;
+
+    Funcionario(String nome, double salarioBase) {
+        this.nome = nome;
+        this.salarioBase = salarioBase;
+    }
+
+    ==> cada tipo calcula do seu jeito!
+    abstract double calcularSalario();
+
+    ==> igual para todos!
+    String getNome() { return nome; }
+    }
+
+    class Gerente extends Funcionario {
+        Gerente(String nome, double base) { super(nome, base); }
+
+        @Override
+        double calcularSalario() { return salarioBase * 1.5; }
+    }
+
+    class Estagiario extends Funcionario {
+        Estagiario(String nome, double base) { super(nome, base); }
+
+        @Override
+        double calcularSalario() { return salarioBase; }
+    }
+
+  -> Interface: É um contrato puro: que define o que uma classe sabe fazer, sem dizer como. Uma classe a adota com "implements".Os métodos são implicitamente public e abstratos (sem corpo).Pode também ter métodos default (com corpo) e static, não guarda estado de instância, só aceita constantes (public static final)e uma classe pode implementar VÁRIAS interfaces.
+
+  ex.:
+  interface Voavel {
+    void voar();
+    }
+
+    interface Nadador {
+        void nadar();
+    }
+
+    class Pato implements Voavel, Nadador {
+        @Override
+        public void voar() { System.out.println("Pato voando"); }
+
+        @Override
+        public void nadar() { System.out.println("Pato nadando"); }
+    }
+
+    class Aviao implements Voavel {
+        @Override
+        public void voar() { System.out.println("Avião voando"); }
+    }
+
+
  */
