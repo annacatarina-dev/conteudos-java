@@ -14,3 +14,5 @@
 - estrutura de repetição;
 - estrutura de condição;
 - métodos getters, setters e constructor;
+- encapsulamento: Pilares da OO(encapsulamento, herança, polimorfismo, abstração);
+- classe abstrata e interface.
